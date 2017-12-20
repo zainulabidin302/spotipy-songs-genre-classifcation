@@ -1,0 +1,41 @@
+import spotipy
+import json
+import spotipy.util as util
+import os
+
+def write_to_file(name, data):
+    with open('DATA-dobara/' + name , 'w') as outfile:
+        json.dump(data, outfile)
+
+            # os.environ['SPOTIPY_CLIENT_ID'] = "8b1ead84f3f645fc9482ebcd0063907b"
+            # os.environ['SPOTIPY_CLIENT_SECRET'] = "910bcc984485440c89fe24531c567c97"
+            # os.environ['SPOTIPY_REDIRECT_URI'] = "http://appslab.io"
+
+
+# token = util.prompt_for_user_token('Anas_CH', '')        
+token = 'BQDxYwxqU028Bc_55WRfS9LMyCqQJuvLkFcolf4PjiimGLfQrtZfupuD5XM3cCXJCjWbm1JD5-WVhv5MnnlLCOt6caXpK0WQDKW6-4aafyf2nJ3QAoGXwAgb8c4oIulHJ_BrIgxkeT60svTiSt7uUCGf55cD3nE'
+sp = spotipy.Spotify(auth=token)
+
+
+
+for genre in ['Pop', 'Rap']:
+    try:
+        results = sp.search(q='genre:'+ genre +'' ,  limit=20,type = 'track')
+    except Exception as e:
+        print(e)
+    continue
+
+    i = 0
+    while results:
+        write_to_file('DATAFILE.' +  genre + '.' + str(i) + '.json' ,results['tracks'])
+        print(results['tracks']['next'])
+        #break
+        #print(results['tracks'])
+        if results['tracks']['next']:
+            results = sp.next(results['tracks'])
+        else:
+            results = None
+
+        if i == 100:
+            break
+        i += 1
